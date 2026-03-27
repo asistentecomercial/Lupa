@@ -1,7 +1,12 @@
 'use client'
 import React, { useState } from 'react';
 import './LupaStyles.css';
-
+interface CheckItem {
+  id: 'arte' | 'densidad' | 'defectos';
+  title: string;
+  desc: string;
+  Icon: React.ComponentType<{ className?: string }>;
+}
 // SVGs Embebidos para control total
 const LupaIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="icon-svg">
@@ -40,17 +45,18 @@ const CheckIcon = () => (
 export default function QualityChecklist() {
   const [checks, setChecks] = useState({ arte: false, densidad: false, defectos: false });
 
-  const toggleCheck = (id:any) => {
+  const toggleCheck = (id: keyof typeof checks) => {
     setChecks(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
   const allCompleted = Object.values(checks).every(Boolean);
 
-  const items = [
+ const items: CheckItem[] = [
     { id: 'arte', title: 'Arte vs. Impresión', desc: 'Validar textos y colores contra muestra.', Icon: LayersIcon },
     { id: 'densidad', title: 'Densidad de Arranque', desc: 'Verificar estabilidad en densitómetro.', Icon: DensityIcon },
     { id: 'defectos', title: 'Registro y Defectos', desc: 'Revisar registro, manchas y velos.', Icon: RegisterIcon },
   ];
+
 
   return (
     <div className="lupa-container">
@@ -69,7 +75,7 @@ export default function QualityChecklist() {
         </div>
 
         <div className="checklist-grid">
-          {items.map(({ id, title, desc, Icon }:any) => (
+          {items.map(({ id, title, desc, Icon }) => (
             <button 
               key={id} 
               onClick={() => toggleCheck(id)}
